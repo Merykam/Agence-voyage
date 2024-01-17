@@ -57,45 +57,45 @@ const signup = async (req,res)=>{
 
    }
 
-//   const signin = async (req, res) => {
-//         const { email, password } = req.body;
+  const signin = async (req, res) => {
+        const { email, password } = req.body;
     
-//         try {
-//             const user = await User.findOne({ email });
-//             if (!user) {
-//                 return res.status(401).json({ error: 'Adresse e-mail ou mot de passe incorrect.' });
-//             }
+        try {
+            const user = await User.findOne({ email });
+            if (!user) {
+                return res.status(401).json({ error: 'Adresse e-mail ou mot de passe incorrect.' });
+            }
     
-//             const isPasswordValid = await bcryptjs.compare(password, user.password);
-//             if (!isPasswordValid) {
-//                 return res.status(401).json({ error: 'Adresse e-mail ou mot de passe incorrect.' });
-//             }
+            const isPasswordValid = await bcryptjs.compare(password, user.password);
+            if (!isPasswordValid) {
+                return res.status(401).json({ error: 'Adresse e-mail ou mot de passe incorrect.' });
+            }
     
-//             const token = jwt.sign({ userId: user }, process.env.JWT_SECRET);
-//             console.log(token);
-//             res.cookie('token',token, {expire : new Date() + 3600000 })
-//             // if(res.cookie('token',token, {expire : new Date() + 3600000 })){
+            const token = jwt.sign({ userId: user }, process.env.JWT_SECRET);
+            console.log(token);
+            res.cookie('token',token, {expire : new Date() + 3600000 })
+            // if(res.cookie('token',token, {expire : new Date() + 3600000 })){
 
-//             //     console.log('yess')
-//             // }else{
-//             //     console.log('noooo');
-//             // }
+            //     console.log('yess')
+            // }else{
+            //     console.log('noooo');
+            // }
 
 
 
 
             
-//             return res.json({ 
-//                 success: true, 
-//                 data: {
-//                     userId: user.id,
-//                     email: user.email,
-//                     token: token,
-//                   }, });
-//         } catch (error) {
-//             res.status(500).json({ success: false, error: error.message });
-//         }
-//     };
+            return res.json({ 
+                success: true, 
+                data: {
+                    userId: user.id,
+                    email: user.email,
+                    token: token,
+                  }, });
+        } catch (error) {
+            res.status(500).json({ success: false, error: error.message });
+        }
+    };
 
     // const signout = (req,res)=>{
     //     res.clearCookie('token');
@@ -143,7 +143,8 @@ const signup = async (req,res)=>{
 
 module.exports={
   
-    signup
+    signup,
+    signin
   
    
 };
