@@ -97,10 +97,10 @@ const signup = async (req,res)=>{
         }
     };
 
-    // const signout = (req,res)=>{
-    //     res.clearCookie('token');
-    //     return res.json({message : "user signout"})
-    // }
+    const signout = (req,res)=>{
+        res.clearCookie('token');
+        return res.json({message : "user signout"})
+    }
 
     
 
@@ -144,7 +144,8 @@ const signup = async (req,res)=>{
 module.exports={
   
     signup,
-    signin
+    signin,
+    signout
   
    
 };
