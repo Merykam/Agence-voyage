@@ -2,7 +2,7 @@ const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
-
+const sendMail = require('../utils/sendMail').sendMail
 
 
  
@@ -47,7 +47,7 @@ const signup = async (req,res)=>{
             await user.save();
             const token = jwt.sign({ userId: user }, process.env.JWT_SECRET);
 
-            // sendMail(req.body.email,token);
+            sendMail(req.body.email,token);
 
             res.json({ success: true, message: 'Check your email to verify.' });
 
@@ -106,31 +106,31 @@ const signup = async (req,res)=>{
 
 
 
-    // const verifyEmail = async (req, res) => {
-    //     const token = req.params.token;
-    //     if(!token){
-    //         return res.json({error: 'finahowa token'})
-    //     }
+    const verifyEmail = async (req, res) => {
+        const token = req.params.token;
+        if(!token){
+            return res.json({error: 'finahowa token'})
+        }
     
-    //     try {
+        try {
        
-    //         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    //         const userId = decodedToken.userId;
+            const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+            const userId = decodedToken.userId;
 
           
           
-    //         console.log(decodedToken);
+            console.log(decodedToken);
            
-    //         await User.findOneAndUpdate({ _id: userId }, { isVerified: true });
+            await User.findOneAndUpdate({ _id: userId }, { isVerified: true });
 
 
-    //         return res.json({success: 'Email has been verified successfully'})
+            return res.json({success: 'Email has been verified successfully'})
     
-    //     } catch (error) {
+        } catch (error) {
             
-    //         res.status(400).json({ success: false, error: 'Lien de vérification invalide ou expiré.' });
-    //     }
-    // };
+            res.status(400).json({ success: false, error: 'Lien de vérification invalide ou expiré.' });
+        }
+    };
 
 
 
