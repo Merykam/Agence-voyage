@@ -3,14 +3,33 @@ const City = require('../models/City');
 const Hotel = require('../models/Hotels');
 const validator = require('validator');
 
+const multer = require('multer');
+const jwt = require('jsonwebtoken')
 
 
  
 const insertPackage = async (req, res) => {
+    console.log(req.body)
     try {
         const { destination, hotel, depart_date, trip_duration, number_of_seats, price, description, status } = req.body;
 
       
+        const tokenString = req.headers.cookie;
+        console.log("this is tocken");
+        console.log("this is it"+tokenString);
+   
+        const tokenarr = tokenString.split("=")
+        console.log(tokenarr);
+        const token1= tokenarr[1]
+        console.log(token1)
+        const decodeToken = jwt.verify(token1, process.env.JWT_SECRET);
+        console.log(decodeToken);
+
+
+        const userId= decodeToken.userId._id;
+      
+  
+       
         if (!validator.isLength(destination, { min: 1, max: 255 })) {
             return res.status(400).json({ error: 'Destination is required.' });
         }
@@ -36,6 +55,9 @@ const insertPackage = async (req, res) => {
             return res.status(400).json({ error: 'Price must be a number.' });
         }
 
+        if (parseFloat(price) < 1) {
+            return res.status(400).json({ error: 'Price must be greater than or equal to 1.' });
+        }
 
         if (!validator.isLength(description, { min: 1, max: 900 })) {
             return res.status(400).json({ error: 'Description is required.' });
@@ -58,6 +80,17 @@ const insertPackage = async (req, res) => {
         }
 
      
+    
+
+        
+        // Image upload succeeded, get the filename
+        const image = req.file ? req.file.filename : undefined;
+
+     
+        
+
+     
+       
         const package = new Package({
             destination: findDestination._id,
             hotel: findHotel._id,
@@ -67,12 +100,17 @@ const insertPackage = async (req, res) => {
             available_seats: number_of_seats,
             price,
             description,
-            status
+            status,
+            image ,
+            user_id: userId
+
         });
 
+        
         await package.save();
 
         return res.json({ success: true, message: 'Package inserted successfully' });
+    
     } catch (error) {
       
         res.status(500).json({ success: false, error: error.message });
@@ -131,7 +169,6 @@ const updatePackage = async (req, res) => {
             return res.status(404).json({ error: 'Hotel not found.' });
         }
 
-     
         const package = await Package.findByIdAndUpdate(id,{
             destination: findDestination._id,
             hotel: findHotel._id,
@@ -156,6 +193,7 @@ const updatePackage = async (req, res) => {
 };
 
 const getAllPackages = async (req, res) => {
+    // return res.status(403).json({message: 'you are not allowed'});
     try {
         const packages = await Package.find().populate({
             path: "destination",

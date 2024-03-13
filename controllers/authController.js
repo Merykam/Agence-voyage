@@ -48,7 +48,7 @@ const signup = async (req,res)=>{
             await user.save();
             const token = jwt.sign({ userId: user }, process.env.JWT_SECRET);
 
-            sendMail(req.body.email,token);
+            sendMail(email,token);
 
             res.json({ success: true, message: 'Check your email to verify.' });
 
@@ -71,16 +71,23 @@ const signup = async (req,res)=>{
             if (!isPasswordValid) {
                 return res.status(401).json({ error: 'Adresse e-mail ou mot de passe incorrect.' });
             }
+
+        
+
+            if(user){
+                const isVerified = user.isVerified;
+                if(isVerified == false){
+                    return res.status(401).json({ error: 'Verify your email' });
+                }
+                
+            }
+
+
     
             const token = jwt.sign({ userId: user }, process.env.JWT_SECRET);
             console.log(token);
             res.cookie('token',token, {expire : new Date() + 3600000 })
-            // if(res.cookie('token',token, {expire : new Date() + 3600000 })){
-
-            //     console.log('yess')
-            // }else{
-            //     console.log('noooo');
-            // }
+            
 
 
 
@@ -92,6 +99,7 @@ const signup = async (req,res)=>{
                     userId: user.id,
                     email: user.email,
                     token: token,
+                    role:user.role
                   }, });
         } catch (error) {
             res.status(500).json({ success: false, error: error.message });
@@ -116,7 +124,7 @@ const signup = async (req,res)=>{
         try {
        
             const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-            const userId = decodedToken.userId;
+            const userId = decodedToken.userId._id;
 
           
           
@@ -134,6 +142,28 @@ const signup = async (req,res)=>{
     };
 
 
+    const getUserInfo = async(req,res)=>{
+
+        const tokenString = req.headers.cookie;
+        if(tokenString){
+            const tokenarr = tokenString.split("=")
+        const token = tokenarr[1]
+        console.log(token)
+        const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
+        const userId= decodeToken.userId._id;
+        const findUser = await User.find({_id:userId});
+        return res.json({user: findUser});
+        }else{
+            return res.json({user: "nothing"});
+        }
+        
+
+       
+
+
+        
+    }
+
 
 
 
@@ -146,7 +176,9 @@ module.exports={
   
     signup,
     signin,
-    signout
+    verifyEmail,
+    signout,
+    getUserInfo
   
    
 };

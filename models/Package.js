@@ -40,11 +40,14 @@ const packageSchema = new mongoose.Schema({
         enum: ['available', 'saturated'],
         required: true
     },
-    // user_id: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'User',
-    //     required: true
-    // }
+    image: {
+        type: String 
+    },
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 });
 
 const Package = mongoose.model("Package", packageSchema);
