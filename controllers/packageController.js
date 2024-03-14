@@ -224,6 +224,19 @@ const deletePackage = async (req, res) => {
 };
 
 
+const packageById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const package = await Package.findById(id).populate('destination hotel user_id');
+        if (!package) {
+            return res.status(404).json({ success: false, error: 'Package not found' });
+        }
+        return res.json({ success: true, package });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+};
+
 
 
     
@@ -236,7 +249,8 @@ module.exports={
     insertPackage,
     updatePackage,
     getAllPackages,
-    deletePackage
+    deletePackage,
+    packageById
   
    
 };

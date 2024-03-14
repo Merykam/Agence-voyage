@@ -20,7 +20,7 @@ router.post('/insertPackage', [authenticateJWT, IsAdmin, upload], packageControl
 router.post('/updatePackage/:id',[authenticateJWT, IsAdmin], packageController.updatePackage);
 router.get('/getAllPackages', packageController.getAllPackages);
 router.delete('/deletePackage/:id',[authenticateJWT, IsAdmin], packageController.deletePackage);
-
+router.get('/packageById/:id', packageController.packageById);
 
 
 

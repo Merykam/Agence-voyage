@@ -70,7 +70,11 @@ async function seedHotels() {
 }
 
 
-mongoose.connect('mongodb+srv://kamaychmeryem1:1234567890@cluster0.ixsvmdn.mongodb.net/', {
+// mongoose.connect('mongodb+srv://kamaychmeryem1:1234567890@cluster0.ixsvmdn.mongodb.net/', {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// });
+mongoose.connect('mongodb://127.0.0.1:27017/booking-trip', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });

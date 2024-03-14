@@ -145,17 +145,26 @@ const signup = async (req,res)=>{
     const getUserInfo = async(req,res)=>{
 
         const tokenString = req.headers.cookie;
-        if(tokenString){
-            const tokenarr = tokenString.split("=")
-        const token = tokenarr[1]
-        console.log(token)
-        const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
-        const userId= decodeToken.userId._id;
-        const findUser = await User.find({_id:userId});
-        return res.json({user: findUser});
-        }else{
-            return res.json({user: "nothing"});
+        console.log("user tokennnn"+tokenString);
+        try{
+            if(tokenString){
+                const tokenarr = tokenString.split("=")
+            const token = tokenarr[1]
+            // if(!token){
+            //     return res.status(403).json({message:'no token'})
+            // }
+            const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
+            const userId= decodeToken.userId._id;
+            const findUser = await User.find({_id:userId});
+            return res.json({user: findUser});
+            }else{
+                return res.json({user: "nothing"});
+            }
+
+        }catch(error){
+            return res.json({err: error.message});
         }
+        
         
 
        

@@ -5,6 +5,7 @@ const packageRoute = require('./routes/packageRoutes');
 const hotelRoute = require('./routes/hotelRoutes');
 const cityRoute = require('./routes/cityRoute');
 const mongoose = require('mongoose');
+const bookRoute = require('./routes/bookRoutes')
 
 require('dotenv').config()
 const cors = require('cors');
@@ -26,8 +27,8 @@ app.use(cors({
 }))
 
 mongoose.connect(db)
-.then(()=>console.log(`database connected : ${db}`))
-.catch(()=>console.log(`not connected : ${db}`))
+    .then(() => console.log(`Database connected: ${db}`))
+    .catch(error => console.error(`Database connection error: ${error}`));
 
 
 app.listen(port,()=>{
@@ -39,3 +40,4 @@ app.use('/api/auth',userRoute);
 app.use('/api/package',packageRoute);
 app.use('/api/hotel',hotelRoute);
 app.use('/api/city',cityRoute);
+app.use('/api/booking',bookRoute);

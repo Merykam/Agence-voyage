@@ -21,8 +21,16 @@ const reservationSchema = new mongoose.Schema({
     },
     reservation_date: {
         type: Date,
+        default: Date.now, 
         required: true
     }
+});
+
+reservationSchema.pre('save', function(next) {
+    if (!this.reservation_date) {
+        this.reservation_date = new Date();
+    }
+    next();
 });
 
 const Reservation = mongoose.model("Reservation", reservationSchema);
