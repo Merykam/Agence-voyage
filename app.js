@@ -6,6 +6,7 @@ const hotelRoute = require('./routes/hotelRoutes');
 const cityRoute = require('./routes/cityRoute');
 const mongoose = require('mongoose');
 const bookRoute = require('./routes/bookRoutes')
+const usersRoute = require('./routes/userRoute')
 
 require('dotenv').config()
 const cors = require('cors');
@@ -41,3 +42,4 @@ app.use('/api/package',packageRoute);
 app.use('/api/hotel',hotelRoute);
 app.use('/api/city',cityRoute);
 app.use('/api/booking',bookRoute);
+app.use('/api/user',usersRoute);

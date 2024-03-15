@@ -2,10 +2,11 @@ const jwt = require('jsonwebtoken');
 
 function authenticateJWT(req, res, next) {
   const tokenString = req.headers.cookie;
-  console.log(tokenString)
+  console.log("111"+tokenString)
   const tokenarr = tokenString.split("=")
+  console.log("tokenarr"+tokenarr);
   const token = tokenarr[1]
-  console.log(token)
+  console.log("ggggggggggggggg"+token)
 
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized' });

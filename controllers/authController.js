@@ -106,10 +106,10 @@ const signup = async (req,res)=>{
         }
     };
 
-    const signout = (req,res)=>{
-        res.clearCookie('token');
-        return res.json({message : "user signout"})
-    }
+const signout = (req,res)=>{
+    res.clearCookie('token');
+    return res.json({message : "user signout"})
+}
 
     
 
@@ -145,7 +145,7 @@ const signup = async (req,res)=>{
     const getUserInfo = async(req,res)=>{
 
         const tokenString = req.headers.cookie;
-        console.log("user tokennnn"+tokenString);
+        console.log("user tokennnn   :"+tokenString);
         try{
             if(tokenString){
                 const tokenarr = tokenString.split("=")
