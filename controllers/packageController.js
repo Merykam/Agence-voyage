@@ -193,7 +193,6 @@ const updatePackage = async (req, res) => {
 };
 
 const getAllPackages = async (req, res) => {
-    // return res.status(403).json({message: 'you are not allowed'});
     try {
         const packages = await Package.find().populate({
             path: "destination",
