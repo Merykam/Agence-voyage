@@ -31,7 +31,7 @@ const signup = async (req,res)=>{
             const userdb = await User.findOne({ email:email});
 
             if(userdb){
-                return res.json({err :"user already exists" });
+                return res.json({ "error": "user already exists", });
           
             }
            

@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single('image');
 
 router.post('/insertPackage', [authenticateJWT, IsAdmin, upload], packageController.insertPackage);
-router.post('/updatePackage/:id',[authenticateJWT, IsAdmin], packageController.updatePackage);
+router.post('/updatePackage/:id',[authenticateJWT, IsAdmin, upload], packageController.updatePackage);
 router.get('/getAllPackages', packageController.getAllPackages);
 router.delete('/deletePackage/:id',[authenticateJWT, IsAdmin], packageController.deletePackage);
 router.get('/packageById/:id', packageController.packageById);

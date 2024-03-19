@@ -83,7 +83,7 @@ const insertPackage = async (req, res) => {
     
 
         
-        // Image upload succeeded, get the filename
+       
         const image = req.file ? req.file.filename : undefined;
 
      
@@ -91,7 +91,7 @@ const insertPackage = async (req, res) => {
 
      
        
-        const package = new Package({
+        const package1 = new Package({
             destination: findDestination._id,
             hotel: findHotel._id,
             depart_date,
@@ -107,7 +107,7 @@ const insertPackage = async (req, res) => {
         });
 
         
-        await package.save();
+        await package1.save();
 
         return res.json({ success: true, message: 'Package inserted successfully' });
     
@@ -121,6 +121,23 @@ const insertPackage = async (req, res) => {
 const updatePackage = async (req, res) => {
     const { id } = req.params;
     const { destination, hotel, depart_date, trip_duration, number_of_seats, price, description, status } = req.body;
+    const image = req.file ? req.file.filename : undefined;
+    console.log("image :"+image);
+    const tokenString = req.headers.cookie;
+    console.log("this is tocken");
+    console.log("this is it"+tokenString);
+
+    const tokenarr = tokenString.split("=")
+    console.log(tokenarr);
+    const token1= tokenarr[1]
+    console.log(token1)
+    const decodeToken = jwt.verify(token1, process.env.JWT_SECRET);
+    console.log(decodeToken);
+
+
+
+
+    const userId= decodeToken.userId._id;
     try {
 
         if (!validator.isLength(destination, { min: 1, max: 255 })) {
@@ -169,24 +186,46 @@ const updatePackage = async (req, res) => {
             return res.status(404).json({ error: 'Hotel not found.' });
         }
 
-        const package = await Package.findByIdAndUpdate(id,{
-            destination: findDestination._id,
-            hotel: findHotel._id,
-            depart_date,
-            trip_duration,
-            number_of_seats,
-            available_seats: number_of_seats,
-            price,
-            description,
-            status
-        },{ new: true });
+        
+        const oldPackage = await Package.find({_id:id})
+        const findSeats = oldPackage[0].number_of_seats;
+        const findAvailableSeats = oldPackage[0].available_seats;
+        console.log("findSeats :"+findSeats);
+
+        
+
+            const newSeats= number_of_seats - findSeats
+            const newAvailableSeats = newSeats+findAvailableSeats
+
+
+            const package2 = await Package.findByIdAndUpdate(id,{
+                destination: findDestination._id,
+                hotel: findHotel._id,
+                depart_date,
+                trip_duration,
+                number_of_seats,
+                available_seats: newAvailableSeats,
+                price,
+                description,
+                status,
+                image ,
+                user_id: userId
+            },{ new: true });
+
+
+            return res.json({ success: true, message: 'Package updated successfully', package2 });
+
+        
+        
+
+        
       
 
-        if (!package) {
+        if (!package2) {
             return res.status(404).json({ success: false, error: 'Package not found' });
         }
 
-        return res.json({ success: true, message: 'Package updated successfully', package });
+       
     } catch (error) {
         return res.status(500).json({ success: false, error: error.message });
     }
@@ -212,8 +251,8 @@ const getAllPackages = async (req, res) => {
 const deletePackage = async (req, res) => {
     const { id } = req.params;
     try {
-        const package = await Package.findByIdAndDelete(id);
-        if (!package) {
+        const package3 = await Package.findByIdAndDelete(id);
+        if (!package3) {
             return res.status(404).json({ success: false, error: 'Package not found' });
         }
         return res.json({ success: true, message: 'Package deleted successfully' });
@@ -226,11 +265,11 @@ const deletePackage = async (req, res) => {
 const packageById = async (req, res) => {
     const { id } = req.params;
     try {
-        const package = await Package.findById(id).populate('destination hotel user_id');
-        if (!package) {
+        const package4 = await Package.findById(id).populate('destination hotel user_id');
+        if (!package4) {
             return res.status(404).json({ success: false, error: 'Package not found' });
         }
-        return res.json({ success: true, package });
+        return res.json({ success: true, package4 });
     } catch (error) {
         return res.status(500).json({ success: false, error: error.message });
     }
