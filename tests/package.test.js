@@ -55,7 +55,7 @@ describe('Insert newPackage Function', () => {
         expect(res.json).toHaveBeenCalledWith({  "error": "Destination not found.",});
     });
 
-    // Add more test cases for other validation checks, mocking City and Hotel models appropriately
+    
 
     it('should insert newPackage successfully', async () => {
         newPackage.findOne.mockResolvedValue(null);

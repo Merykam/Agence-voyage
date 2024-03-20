@@ -3,24 +3,22 @@ const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// Mocking User.findOne to return null (user does not exist in the database)
-// Mocking the User model
 jest.mock('../models/user', () => ({
     findOne: jest.fn(),
     create: jest.fn(),
 }));
 
-// Mocking bcryptjs.hash
+
 jest.mock('bcryptjs', () => ({
     hash: jest.fn(),
 }));
 
-// Mocking jwt.sign
+
 jest.mock('jsonwebtoken', () => ({
     sign: jest.fn(),
 }));
 
-// Mocking sendMail function
+
 jest.mock('../utils/sendMail', () => ({
     sendMail: jest.fn(),
 }));
@@ -48,28 +46,28 @@ describe('Signup Function', () => {
     });
 
     it('should return an error if name length is invalid', async () => {
-        req.body.name = ''; // Invalid name (empty)
+        req.body.name = ''; 
         await signup(req, res, next);
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({ error: 'Le nom est requis.' });
     });
 
     it('should return an error if email format is invalid', async () => {
-        req.body.email = 'invalidemail'; // Invalid email format
+        req.body.email = 'invalidemail'; 
         await signup(req, res, next);
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({ error: 'Adresse e-mail invalide.' });
     });
 
     it('should return an error if password is not strong enough', async () => {
-        req.body.password = 'weak'; // Weak password
+        req.body.password = 'weak'; 
         await signup(req, res, next);
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({ error: 'Le mot de passe doit être fort.' });
     });
 
     it('should return an error if user already exists', async () => {
-        User.findOne.mockResolvedValue({ email: req.body.email }); // Mocking existing user
+        User.findOne.mockResolvedValue({ email: req.body.email }); 
         await signup(req, res, next);
         expect(res.json).toHaveBeenCalledWith({ error: 'user already exists' });
     });
@@ -98,7 +96,7 @@ describe('Signup Function', () => {
     
 
     it('should handle internal server error', async () => {
-        User.findOne.mockRejectedValue(new Error('Database error')); // Mocking database error
+        User.findOne.mockRejectedValue(new Error('Database error')); 
         await signup(req, res, next);
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.json).toHaveBeenCalledWith({ success: false, error: 'Database error' });

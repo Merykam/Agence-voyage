@@ -1,7 +1,7 @@
 const Booking = require('../models/Reservation');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
-const package = require('../models/Package')
+const package1 = require('../models/Package')
 
 
 
@@ -17,7 +17,7 @@ const booking = async (req, res) => {
 
     try {
         
-        const findPackage = await package.findById(packageId);
+        const findPackage = await package1.findById(packageId);
         
         
         if (!findPackage || !findPackage.available_seats) {
@@ -42,7 +42,7 @@ const booking = async (req, res) => {
         console.log("calculSeats : " + calculSeats);
 
         if(calculSeats ==  0){
-            await package.findByIdAndUpdate(packageId,{
+            await package1.findByIdAndUpdate(packageId,{
                 available_seats:calculSeats,
                 status:"saturated"
                 
@@ -71,7 +71,7 @@ const booking = async (req, res) => {
            return  res.json({ success: true, message: booking });
         }
 
-        await package.findByIdAndUpdate(packageId,{
+        await package1.findByIdAndUpdate(packageId,{
             available_seats:calculSeats,
             
         })

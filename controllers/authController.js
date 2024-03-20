@@ -93,7 +93,7 @@ const signup = async (req,res)=>{
 
 
             
-            return res.json({ 
+            return res.status(200).json({ 
                 success: true, 
                 data: {
                     userId: user.id,
@@ -150,9 +150,6 @@ const signout = (req,res)=>{
             if(tokenString){
                 const tokenarr = tokenString.split("=")
             const token = tokenarr[1]
-            // if(!token){
-            //     return res.status(403).json({message:'no token'})
-            // }
             const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
             const userId= decodeToken.userId._id;
             const findUser = await User.find({_id:userId});
