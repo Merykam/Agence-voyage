@@ -142,13 +142,54 @@ const showBookById = async (req, res)=>{
     }
 }
 
+const showUserBooking = async (req, res)=>{
+
+    
+    const tokenString = req.headers.cookie;
+    console.log("user tokennnn   :"+tokenString);
+    
+    try{
+
+        if(tokenString){
+            const tokenarr = tokenString.split("=")
+        const token = tokenarr[1]
+        const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
+        const userId= decodeToken.userId._id;
+
+        
+        const findBooking = await Booking.find({user_id:userId})
+        .populate({
+            path: 'package_id',
+            populate: {
+                path: 'destination hotel',
+                select: 'name',
+            }
+        }).populate('user_id');
+
+        console.log(findBooking);
+        
+        res.json({ success: true, Userbooking: findBooking });
+        
+       
+      
+        }else{
+            res.json({ success: true, booking: "no historiques" });
+        }
+
+
+    }catch{
+
+    }
+}
+
 
 
    
 module.exports={
     booking,
     showBookings,
-    showBookById
+    showBookById,
+    showUserBooking
   
    
 };

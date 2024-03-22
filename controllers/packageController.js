@@ -87,9 +87,18 @@ const insertPackage = async (req, res) => {
         const image = req.file ? req.file.filename : undefined;
 
      
-        
+        const date = new Date();
 
-     
+        console.log(date);
+
+
+    
+        const departDate = new Date(depart_date);
+        const currentDate = new Date();
+    
+        if (departDate < currentDate) {
+            return res.status(400).json({ error: 'Departure date cannot be in the past.' });
+        }
        
         const package1 = new Package({
             destination: findDestination._id,
@@ -135,7 +144,12 @@ const updatePackage = async (req, res) => {
     console.log(decodeToken);
 
 
+    const departDate = new Date(depart_date);
+    const currentDate = new Date();
 
+    if (departDate < currentDate) {
+        return res.status(400).json({ error: 'Departure date cannot be in the past.' });
+    }
 
     const userId= decodeToken.userId._id;
     try {
